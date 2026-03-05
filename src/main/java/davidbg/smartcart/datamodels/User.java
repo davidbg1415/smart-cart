@@ -5,88 +5,172 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 /**
- * @author DAVID BEN GIGI
+ * הסבר על המחלקה:
+ * מחלקה זו מייצגת משתמש רשום במערכת.
+ * המידע כולל פרטים אישיים, פרטי התחברות והעדפות סגנון המשמשות את אלגוריתם סל הקניות החכם.
+ * * @author DAVID BEN GIGI
  */
-
 @Document(collection = "Users")
 public class User
 {
     @Id
-    private String id;
-    private String fullName;
-    private String email;
-    private String password; // אמורה להישמר מוצפנת
-    private String phone;
-    private List<String> preferences; // מערך תגיות לחישוב ניקוד
-    private Address defaultAddress;
+    private String id;               // מזהה ייחודי של המשתמש במסד הנתונים
+    private String fullName;         // שם מלא של המשתמש
+    private String email;            // כתובת אימייל המשמשת גם כשם משתמש
+    private String password;         // סיסמת התחברות (נשמרת בצורה מוצפנת)
+    private String phone;            // מספר טלפון ליצירת קשר
+    private List<String> preferences; // רשימת תגיות המייצגות את העדפות הלבוש של המשתמש
+    private Address defaultAddress;  // כתובת ברירת המחדל למשלוחים
 
+    /**
+     * בנאי ברירת מחדל:
+     * נדרש עבור טעינת נתונים ממסד הנתונים על ידי המערכת.
+     */
     public User() {}
 
+    /**
+     * בנאי מאתחל עם פרמטרים:
+     * מאפשר יצירת משתמש חדש במערכת עם כל הפרטים הנדרשים.
+     * * @param id מזהה המשתמש.
+     * @param fullName שם המשתמש המלא.
+     * @param email כתובת דואר אלקטרוני.
+     * @param password סיסמה מאובטחת.
+     * @param phone מספר טלפון.
+     * @param preferences רשימת העדפות.
+     * @param defaultAddress כתובת למשלוח.
+     */
+    public User(String id, String fullName, String email, String password, String phone, List<String> preferences, Address defaultAddress) 
+    {
+        this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.preferences = preferences;
+        this.defaultAddress = defaultAddress;
+    }
+
+    /**
+     * מחזירה את המזהה הייחודי של המשתמש.
+     * @return מחרוזת המייצגת את מפתח המשתמש.
+     */
     public String getId() 
     { 
         return id; 
     }
 
+    /**
+     * מעדכנת את המזהה הייחודי של המשתמש.
+     * @param id מזהה חדש להגדרה.
+     */
     public void setId(String id) 
     { 
         this.id = id; 
     }
 
+    /**
+     * מחזירה את השם המלא של המשתמש.
+     * @return מחרוזת של שם המשתמש.
+     */
     public String getFullName() 
     { 
         return fullName; 
     }
 
+    /**
+     * מעדכנת את השם המלא של המשתמש.
+     * @param fullName שם חדש לעדכון.
+     */
     public void setFullName(String fullName) 
     { 
         this.fullName = fullName; 
     }
 
+    /**
+     * מחזירה את כתובת האימייל של המשתמש.
+     * @return מחרוזת של כתובת הדואר האלקטרוני.
+     */
     public String getEmail() 
     { 
         return email; 
     }
 
+    /**
+     * מעדכנת את כתובת האימייל של המשתמש.
+     * @param email כתובת חדשה להגדרה.
+     */
     public void setEmail(String email) 
     { 
         this.email = email; 
     }
 
+    /**
+     * מחזירה את הסיסמה המוצפנת של המשתמש.
+     * @return מחרוזת המייצגת את הסיסמה.
+     */
     public String getPassword() 
     { 
         return password; 
     }
 
+    /**
+     * מעדכנת סיסמה חדשה למשתמש.
+     * @param password סיסמה חדשה להגדרה.
+     */
     public void setPassword(String password) 
     { 
         this.password = password; 
     }
 
+    /**
+     * מחזירה את מספר הטלפון של המשתמש.
+     * @return מחרוזת של מספר הטלפון.
+     */
     public String getPhone() 
     { 
         return phone;
     }
 
+    /**
+     * מעדכנת את מספר הטלפון של המשתמש.
+     * @param phone מספר טלפון חדש.
+     */
     public void setPhone(String phone) 
     { 
         this.phone = phone; 
     }
 
+    /**
+     * מחזירה את רשימת ההעדפות האישיות של המשתמש.
+     * @return רשימה של תגיות סגנון מועדפות.
+     */
     public List<String> getPreferences() 
     { 
         return preferences; 
     }
 
+    /**
+     * מעדכנת את רשימת ההעדפות של המשתמש.
+     * @param preferences רשימת תגיות חדשה.
+     */
     public void setPreferences(List<String> preferences) 
     { 
         this.preferences = preferences; 
     }
 
+    /**
+     * מחזירה את כתובת ברירת המחדל למשלוח.
+     * @return אובייקט מסוג כתובת.
+     */
     public Address getDefaultAddress() 
     { 
         return defaultAddress; 
     }
 
+    /**
+     * מעדכנת את כתובת ברירת המחדל של המשתמש.
+     * @param defaultAddress אובייקט כתובת חדש.
+     */
     public void setDefaultAddress(Address defaultAddress) 
     { 
         this.defaultAddress = defaultAddress; 
