@@ -21,6 +21,7 @@ public class User
     private String phone;            // מספר טלפון ליצירת קשר
     private List<String> preferences; // רשימת תגיות המייצגות את העדפות הלבוש של המשתמש
     private Address defaultAddress;  // כתובת ברירת המחדל למשלוחים
+    private Role role; // ADMIN, REGISTERED_USER
 
     /**
      * בנאי ברירת מחדל:
@@ -174,5 +175,15 @@ public class User
     public void setDefaultAddress(Address defaultAddress) 
     { 
         this.defaultAddress = defaultAddress; 
+    }
+
+    public Role getRole() 
+    { 
+        return role; 
+    }
+
+    public void setRole(Role role) 
+    { 
+        this.role = role; 
     }
 }

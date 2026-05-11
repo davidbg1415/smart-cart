@@ -1,6 +1,9 @@
 package davidbg.smartcart.services;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import davidbg.smartcart.datamodels.Product;
 import davidbg.smartcart.repositories.ProductRepository;
@@ -62,6 +65,14 @@ public class ProductService
    {
       return (ArrayList<Product>)productRepository.findByTagsContaining(tag);
    }
+
+   public List<Product> findFiltered(String search, String gender, String category) {
+    return productRepository.findAll().stream()
+        .filter(p -> (search == null || search.isEmpty() || p.getName().toLowerCase().contains(search.toLowerCase())))
+        .filter(p -> (gender == null || p.getTags().contains(gender)))
+        .filter(p -> (category == null || p.getTags().contains(category)))
+        .collect(Collectors.toList());
+}
 
    /**
     * מחיקת מוצר מהקטלוג:

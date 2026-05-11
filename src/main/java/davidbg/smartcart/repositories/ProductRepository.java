@@ -21,4 +21,8 @@ public interface ProductRepository extends MongoRepository<Product, String>
      * @return רשימה של אובייקטי מוצר התואמים לתגית המבוקשת.
      */
     List<Product> findByTagsContaining(String tag);
+
+    // Spring יודע לממש את זה אוטומטית לפי שם המתודה!
+    // זה יחפש מוצרים שהשם שלהם מכיל את המחרוזת (בלי קשר לאותיות גדולות/קטנות)
+    List<Product> findByNameContainingIgnoreCase(String name);
 }

@@ -1,0 +1,13 @@
+package davidbg.smartcart.datamodels;
+
+public class SurveyCriteria 
+{
+    public String gender;      // גברים / נשים
+    public String category;    // חולצות / מכנסיים / נעליים / הכל
+    public String occasion;    // Wedding, Office, Gym, Casual, Vacation...
+    public String style;       // Elegant, Streetwear, Classic, Oversize...
+    public String fabric;      // 100% כותנה, פשתן, סאטן, דנים...
+    public String color;       // שחור, לבן, כחול נייבי, בז'...
+    public String season;      // קיץ, חורף, אביב/סתיו
+    public String pattern;     // חלק, משובץ, פסים, פרחוני
+}

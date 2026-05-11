@@ -1,93 +1,66 @@
 package davidbg.smartcart.services;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import davidbg.smartcart.datamodels.User;
+import davidbg.smartcart.datamodels.Role; 
 import davidbg.smartcart.repositories.UserRepository;
 
 /**
- * הסבר על המחלקה:
- * מחלקה זו מהווה את שכבת השירות עבור ניהול המשתמשים במערכת.
- * השירות מטפל ברישום משתמשים חדשים, אימות פרטי התחברות וניהול פרופיל המשתמש.
- * * @author DAVID BEN GIGI
+ * שכבת השירות המעודכנת לניהול משתמשים.
+ * תומכת בהתחברות מבוססת Optional ובניהול תפקידים (Roles).
+ * @author DAVID BEN GIGI
  */
 @Service
-public class UserService 
-{
-   // ממשק הגישה לנתוני המשתמשים במסד הנתונים
-   private UserRepository userRepository;
+public class UserService {
 
-   /**
-    * בנאי המאתחל את השירות:
-    * מבצע הזרקה של שכבת הגישה לנתונים לצורך ביצוע פעולות מול אוסף המשתמשים.
-    * * @param userRepository ממשק הגישה לנתוני המשתמשים.
-    */
-   public UserService(UserRepository userRepository)
-   {
-      this.userRepository = userRepository;
-   }
+    private final UserRepository userRepository;
 
-   /**
-    * הוספת משתמש חדש למסד הנתונים:
-    * מבצעת בדיקה אם המזהה כבר קיים, ואם לא - שומרת את המשתמש החדש.
-    * * @param user אובייקט המשתמש המכיל את פרטי הרישום.
-    * @return ערך בוליאני המציין אם המשתמש נוסף בהצלחה או שכבר היה קיים.
-    */
-   /// C (Create)
-   public boolean addUserToDB(User user)
-   {
-      // בדיקה אם המשתמש כבר קיים לפי המזהה הייחודי שלו
-      if (userRepository.existsById(user.getId()))
-         return false;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-      userRepository.insert(user);
-      return true;
-   }
+    /**
+     * הוספת משתמש חדש:
+     * מוודא שהאימייל ייחודי ומגדיר תפקיד "REGISTERED_USER" כברירת מחדל.
+     */
+    public boolean registerNewUser(User user) 
+    {
+        // בדיקה אם האימייל (שמשמש כשם משתמש) כבר קיים
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            return false;
+        }
 
-   /**
-    * שליפת כל המשתמשים הרשומים:
-    * מחזירה רשימה מלאה של כל אובייקטי המשתמש הקיימים במערכת.
-    * * @return רשימה מסוג מערך המכילה את כל המשתמשים.
-    */
-   /// R (Read/Retrieve)
-   public ArrayList<User> getAllUsers()
-   {
-      return (ArrayList<User>)userRepository.findAll();
-   }
+        // הגדרת תפקיד ברירת מחדל אם לא הוגדר
+        if (user.getRole() == null) {
+            user.setRole(Role.REGISTERED_USER);
+        }
 
-   /**
-    * בדיקה אם המשתמש קיים במערכת:
-    * מבצעת אימות של כתובת האימייל והסיסמה מול מסד הנתונים.
-    * * @param email כתובת הדואר האלקטרוני של המשתמש.
-    * @param password הסיסמה האישית של החשבון.
-    * @return ערך בוליאני המציין אם נמצא משתמש תואם.
-    */
-   public boolean isUserExists(String email, String password)
-   {
-      User user = userRepository.findOneByEmailAndPassword(email, password);
-      return user != null;
-   }
+        userRepository.save(user);
+        return true;
+    }
 
-   /**
-    * שליפת משתמש לפי פרטי התחברות:
-    * מחזירה את אובייקט המשתמש המלא לאחר אימות אימייל וסיסמה.
-    * * @param email כתובת הדואר האלקטרוני.
-    * @param password הסיסמה האישית.
-    * @return אובייקט המשתמש במידה והפרטים נכונים, אחרת מחזירה ערך ריק.
-    */
-   public User getUser(String email, String password)
-   {
-      return userRepository.findOneByEmailAndPassword(email, password);
-   }
+    /**
+     * אימות פרטי התחברות (Login):
+     * מחזיר Optional כדי שה-UI יוכל לטפל במקרה של "לא נמצא" בקלות.
+     */
+    public Optional<User> login(String email, String password) {
+        // מציאת משתמש שתואם גם לאימייל וגם לסיסמה
+        return userRepository.findByEmailAndPassword(email, password);
+    }
 
-   /**
-    * מחיקת משתמש מהמערכת:
-    * מסירה לצמיתות את המשתמש המבוקש ממסד הנתונים.
-    * * @param user אובייקט המשתמש המיועד למחיקה.
-    */
-   /// D (Delete)
-   public void deleteUser(User user)
-   {
-      userRepository.delete(user);
-   }
+    /**
+     * שליפת כל המשתמשים.
+     */
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    /**
+     * מחיקת משתמש.
+     */
+    public void deleteUser(User user) {
+        userRepository.delete(user);
+    }
 }
