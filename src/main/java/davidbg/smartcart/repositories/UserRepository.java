@@ -31,4 +31,6 @@ public interface UserRepository extends MongoRepository<User, String>
      * @return Optional עם פרטי המשתמש אם הוא קיים.
      */
     Optional<User> findByEmail(String email);
+
+    
 }

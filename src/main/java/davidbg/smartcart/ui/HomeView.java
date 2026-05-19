@@ -12,34 +12,55 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import davidbg.smartcart.datamodels.Role;
 import davidbg.smartcart.datamodels.User;
+import davidbg.smartcart.services.ProductService;
+import davidbg.smartcart.services.UserService;
+import davidbg.smartcart.services.WeatherService;
+import davidbg.smartcart.utilities.MainLayout;
 
-@Route("") // דף הבית הראשי
+/**
+ * מחלקת HomeView מייצגת את דף הנחיתה הראשי של האפליקציה.
+ * הדף מציג תוכן דינמי המשתנה בהתאם למצב ההתחברות של המשתמש (אורח לעומת משתמש רשום).
+ */
+@Route(value = "", layout = MainLayout.class) // הגדרת הנתיב כדף הבית תחת תבנית MainLayout
 @PageTitle("דף הבית | SmartCart")
 public class HomeView extends VerticalLayout 
 {
+    // 1. עדכון משתני המחלקה והזרקתם בקונסטרקטור
+private final WeatherService weatherService;
+private final ProductService productService;
+private final UserService userService;
 
-    public HomeView() 
+    /**
+     * קונסטרקטור דף הבית - Spring יזריק לכאן אוטומטית את הסרוויסים
+     */
+    public HomeView(WeatherService weatherService, ProductService productService ,UserService userService ) 
     {
-        // 1. בדיקה מי המשתמש הנוכחי
+        this.weatherService = weatherService;
+        this.productService = productService;
+        this.userService = userService;
+
+        // 1. שליפת אובייקט המשתמש הנוכחי מה-VaadinSession לצורך זיהוי
         User currentUser = (User) VaadinSession.getCurrent().getAttribute("user");
 
-        // הגדרות עיצוב כלליות לדף
-        setAlignItems(Alignment.CENTER);
-        setPadding(false);
-        setSpacing(false);
+        // 2. הגדרות עיצוב ויזואליות לדף הראשי
+        setAlignItems(Alignment.CENTER); // מרכוז כל הרכיבים במישור האופקי
+        setPadding(false); // ביטול ריווח פנימי כברירת מחדל
+        setSpacing(false); // ביטול מרווחים אוטומטיים בין רכיבים
+        setSizeFull(); // פריסת הדף על כל שטח המסך הזמין
+        
+        // הגדרת רקע מדורג (Gradient) למראה מודרני
         getStyle().set("background", "linear-gradient(to bottom, #ffffff, #f1f5f9)");
-        setSizeFull();
 
-        // באנר עליון  
+        // 3. יצירת רכיב הכותרת העליונה (Header) המקומי
         createHeader(currentUser);
 
-        // תוכן מרכזי
+        // 4. יצירת מיכל לתוכן המרכזי של הדף כדי לשמור על גבולות רוחב נוחים לקריאה
         VerticalLayout content = new VerticalLayout();
         content.setAlignItems(Alignment.CENTER);
         content.setMaxWidth("1000px");
 
+        // 5. לוגיקה לבניית התצוגה: אם אין משתמש בסשן - הצג דף אורח, אחרת הצג דף משתמש
         if (currentUser == null) 
         {
             buildGuestView(content);
@@ -49,38 +70,37 @@ public class HomeView extends VerticalLayout
             buildAuthenticatedView(content, currentUser);
         }
 
+        // הוספת מיכל התוכן לדף הראשי
         add(content);
     }
 
+    /**
+     * יצירת ה-Header המקומי של הדף.
+     */
     private void createHeader(User user) 
     {
         HorizontalLayout header = new HorizontalLayout();
         header.setWidthFull();
         header.setPadding(true);
-        header.setJustifyContentMode(JustifyContentMode.BETWEEN);
+        header.setJustifyContentMode(JustifyContentMode.BETWEEN); // פיזור רכיבים לקצוות
         header.setAlignItems(Alignment.CENTER);
-        header.getStyle().set("background-color", "white").set("box-shadow", "0 2px 4px rgba(0,0,0,0.05)");
+        
+        // עיצוב ה-Header עם צבע לבן וצללית עדינה
+        header.getStyle()
+                .set("background-color", "white")
+                .set("box-shadow", "0 2px 4px rgba(0,0,0,0.05)");
 
+        // הוספת לוגו טקסטואלי מעוצב
         H2 logo = new H2("SmartCart");
         logo.getStyle().set("color", "#2563eb").set("margin", "0");
-
-        if (user != null) 
-        {
-            Button logoutBtn = new Button("התנתק", VaadinIcon.SIGN_OUT.create(), e -> 
-            {
-                VaadinSession.getCurrent().setAttribute("user", null);
-                UI.getCurrent().getPage().reload();
-            });
-            logoutBtn.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
-            header.add(logo, logoutBtn);
-        } 
-        else 
-        {
-            header.add(logo);
-        }
+        
+        header.add(logo);
         add(header);
     }
 
+    /**
+     * בניית תצוגת האורח (Guest View).
+     */
     private void buildGuestView(VerticalLayout layout) 
     {
         H1 title = new H1("SmartCart");
@@ -90,63 +110,86 @@ public class HomeView extends VerticalLayout
         subTitle.getStyle().set("color", "#64748b");
 
         Span creatorInfo = new Span("נוצר ע\"י: דוד בן גיגי");
-        creatorInfo.getStyle().set("font-weight", "bold").set("color", "#1e293b").set("margin-bottom", "20px");
+        creatorInfo.getStyle()
+                .set("font-weight", "bold")
+                .set("color", "#1e293b")
+                .set("margin-bottom", "20px");
 
-        // תמונת הפתיחה שביקשת
         Image welcomeImg = new Image("images/welcome-banner.jpg", "SmartCart");
         welcomeImg.setWidth("550px");
-        welcomeImg.getStyle().set("border-radius", "15px").set("box-shadow", "0 10px 20px rgba(0,0,0,0.1)");
+        welcomeImg.getStyle()
+                .set("border-radius", "15px")
+                .set("box-shadow", "0 10px 20px rgba(0,0,0,0.1)");
 
-        // כפתורי פעולה לאורח
         FlexLayout actions = new FlexLayout();
         actions.getStyle().set("gap", "20px");
         actions.setJustifyContentMode(JustifyContentMode.CENTER);
         actions.getStyle().set("margin-top", "30px");
 
-        Button loginBtn = new Button("התחברות / הרשמה", VaadinIcon.USER.create(), e -> UI.getCurrent().navigate("login"));
+        Button loginBtn = new Button("התחברות / הרשמה", VaadinIcon.USER.create(), 
+                e -> UI.getCurrent().navigate("login"));
         loginBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_LARGE);
 
-        Button browseBtn = new Button("צפייה בקטלוג", VaadinIcon.SEARCH.create(), e -> UI.getCurrent().navigate("shop"));
+        Button browseBtn = new Button("צפייה בקטלוג", VaadinIcon.SEARCH.create(), 
+                e -> UI.getCurrent().navigate("shop"));
         browseBtn.addThemeVariants(ButtonVariant.LUMO_LARGE);
 
         actions.add(loginBtn, browseBtn);
+        
         layout.add(title, subTitle, creatorInfo, welcomeImg, actions);
     }
 
-    private void buildAuthenticatedView(VerticalLayout layout, User user) 
-    {
-        H1 welcome = new H1("ברוך הבא, " + user.getFullName());
-        welcome.getStyle().set("margin-top", "40px");
-        
-        Span info = new Span("מה תרצה לעשות היום?");
-        info.getStyle().set("color", "#64748b");
+    /**
+     * בניית תצוגת משתמש מזוהה (Authenticated View).
+     * משולבת עם ווידג'ט המלצות מזג אוויר ייעודי.
+     */
+   /**
+ * בניית תצוגת משתמש מזוהה - כעת רכיב מזג האוויר ממוקם מתחת לכרטיסי הניווט
+ */
+private void buildAuthenticatedView(VerticalLayout layout, User user) 
+{
+    H1 welcome = new H1("ברוך הבא, " + user.getFullName());
+    welcome.getStyle().set("margin-top", "30px").set("margin-bottom", "5px");
+    
+    Span info = new Span("מה תרצה לעשות היום?");
+    info.getStyle().set("color", "#64748b").set("margin-bottom", "15px");
 
-        // גריד כרטיסי ניווט
-        FlexLayout menuGrid = new FlexLayout();
-        menuGrid.setFlexWrap(FlexLayout.FlexWrap.WRAP);
-        menuGrid.setJustifyContentMode(JustifyContentMode.CENTER);
-        menuGrid.getStyle().set("gap", "20px").set("padding", "30px");
+    // 1. יצירת גריד כרטיסי הניווט (התפריט הראשי)
+    FlexLayout menuGrid = new FlexLayout();
+    menuGrid.setFlexWrap(FlexLayout.FlexWrap.WRAP);
+    menuGrid.setJustifyContentMode(JustifyContentMode.CENTER);
+    menuGrid.getStyle().set("gap", "20px").set("padding", "10px 0");
 
-        // כרטיסים למשתמש רשום
-        menuGrid.add(createMenuCard("חנות בגדים", "חיפוש וסינון פריטים ידני", VaadinIcon.SHOP, "shop"));
-        menuGrid.add(createMenuCard("סל חכם", "הפעלת אלגוריתם התאמה", VaadinIcon.MAGIC, "smart-cart"));
-        menuGrid.add(createMenuCard("היסטוריה", "הזמנות קודמות שלי", VaadinIcon.TIME_BACKWARD, "history"));
+    menuGrid.add(createMenuCard("חנות בגדים", "חיפוש וסינון פריטים ידני", VaadinIcon.SHOP, "shop"));
+    menuGrid.add(createMenuCard("סל חכם", "הפעלת אלגוריתם התאמה", VaadinIcon.MAGIC, "smart-cart"));
+    menuGrid.add(createMenuCard("היסטוריה", "הזמנות קודמות שלי", VaadinIcon.TIME_BACKWARD, "history"));
 
-        // כרטיסים למנהל (Admin)
-        if (user.getRole() == Role.ADMIN) 
-        {
-            menuGrid.add(createMenuCard("ניהול מוצרים", "הוספה ועריכת פריטים", VaadinIcon.PACKAGE, "admin-products"));
-        }
-
-        layout.add(welcome, info, menuGrid);
+    if (user.getRole() == davidbg.smartcart.datamodels.Role.ADMIN) {
+        menuGrid.add(createMenuCard("ניהול אתר", "הוספה ועריכת פריטים", VaadinIcon.PACKAGE, "admin"));
     }
 
+    // 2. יצירת רכיב המלצות מזג האוויר והזנת הנתונים
+    WeatherRecommendationSection weatherSection = new WeatherRecommendationSection(
+            weatherService, productService, userService
+    );
+    
+    // שליחת העיר של המשתמש (אם היא null, המתודה בפנים תדע להציג את טופס הרישום לבד!)
+    weatherSection.loadRecommendations(user.getCity());
+
+    // 3. הוספה ל-Layout: קודם כל הברכה, אחר כך הלחצנים, ובתחתית הבאנר הקטן של מזג האוויר
+    layout.add(welcome, info, menuGrid, weatherSection);
+}
+    /**
+     * פונקציית עזר ליצירת כרטיס תפריט מעוצב.
+     */
     private VerticalLayout createMenuCard(String title, String desc, VaadinIcon vIcon, String route) 
     {
         VerticalLayout card = new VerticalLayout();
         card.setWidth("240px");
         card.setAlignItems(Alignment.CENTER);
-        card.getStyle().set("background-color", "white")
+        
+        card.getStyle()
+                .set("background-color", "white")
                 .set("border-radius", "12px")
                 .set("box-shadow", "0 4px 6px rgba(0,0,0,0.05)")
                 .set("cursor", "pointer")
@@ -160,12 +203,15 @@ public class HomeView extends VerticalLayout
         titleLabel.getStyle().set("font-weight", "bold");
 
         Span descLabel = new Span(desc);
-        descLabel.getStyle().set("font-size", "0.85em").set("color", "#64748b").set("text-align", "center");
+        descLabel.getStyle()
+                .set("font-size", "0.85em")
+                .set("color", "#64748b")
+                .set("text-align", "center");
 
         card.add(icon, titleLabel, descLabel);
+        
         card.addClickListener(e -> UI.getCurrent().navigate(route));
         
-        // אפקט מעבר עכבר
         card.getElement().executeJs("this.addEventListener('mouseenter', function() { this.style.backgroundColor = '#f8fafc'; });");
         card.getElement().executeJs("this.addEventListener('mouseleave', function() { this.style.backgroundColor = 'white'; });");
 

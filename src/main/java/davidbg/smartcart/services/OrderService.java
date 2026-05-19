@@ -1,6 +1,8 @@
 package davidbg.smartcart.services;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import davidbg.smartcart.datamodels.Order;
 import davidbg.smartcart.repositories.OrderRepository;
@@ -59,5 +61,10 @@ public class OrderService
    public void deleteOrder(String id)
    {
       orderRepository.deleteById(id);
+   }
+
+   public List<Order> getAllOrders()
+   {
+      return orderRepository.findAll();
    }
 }

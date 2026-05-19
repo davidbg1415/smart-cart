@@ -20,7 +20,7 @@ public class User
     private String password;         // סיסמת התחברות (נשמרת בצורה מוצפנת)
     private String phone;            // מספר טלפון ליצירת קשר
     private List<String> preferences; // רשימת תגיות המייצגות את העדפות הלבוש של המשתמש
-    private Address defaultAddress;  // כתובת ברירת המחדל למשלוחים
+    private String City;  // כתובת ברירת המחדל למשלוחים
     private Role role; // ADMIN, REGISTERED_USER
 
     /**
@@ -40,7 +40,7 @@ public class User
      * @param preferences רשימת העדפות.
      * @param defaultAddress כתובת למשלוח.
      */
-    public User(String id, String fullName, String email, String password, String phone, List<String> preferences, Address defaultAddress) 
+    public User(String id, String fullName, String email, String password, String phone, List<String> preferences, String city ) 
     {
         this.id = id;
         this.fullName = fullName;
@@ -48,7 +48,7 @@ public class User
         this.password = password;
         this.phone = phone;
         this.preferences = preferences;
-        this.defaultAddress = defaultAddress;
+        this.City = city;
     }
 
     /**
@@ -159,24 +159,7 @@ public class User
         this.preferences = preferences; 
     }
 
-    /**
-     * מחזירה את כתובת ברירת המחדל למשלוח.
-     * @return אובייקט מסוג כתובת.
-     */
-    public Address getDefaultAddress() 
-    { 
-        return defaultAddress; 
-    }
-
-    /**
-     * מעדכנת את כתובת ברירת המחדל של המשתמש.
-     * @param defaultAddress אובייקט כתובת חדש.
-     */
-    public void setDefaultAddress(Address defaultAddress) 
-    { 
-        this.defaultAddress = defaultAddress; 
-    }
-
+   
     public Role getRole() 
     { 
         return role; 
@@ -185,5 +168,15 @@ public class User
     public void setRole(Role role) 
     { 
         this.role = role; 
+    }
+
+    public String getCity() 
+    {
+        return City;
+    }
+
+    public void setCity(String city) 
+    {
+        City = city;
     }
 }

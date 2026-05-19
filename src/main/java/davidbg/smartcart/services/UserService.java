@@ -60,7 +60,16 @@ public class UserService {
     /**
      * מחיקת משתמש.
      */
-    public void deleteUser(User user) {
+    public void deleteUser(User user) 
+    {
         userRepository.delete(user);
+    }
+
+     /**
+     * מחיקת משתמש.
+     */
+    public void updateUser(User user) 
+    {
+        userRepository.save(user);
     }
 }

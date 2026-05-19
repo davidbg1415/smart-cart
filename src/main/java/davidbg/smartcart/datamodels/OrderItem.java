@@ -1,44 +1,38 @@
 package davidbg.smartcart.datamodels;
 
 /**
- * הסבר על המחלקה:
- * מחלקה זו מייצגת פריט בודד בתוך הזמנה קיימת.
- * היא שומרת "צילום מצב" של נתוני המוצר ברגע הרכישה כדי להבטיח את אמינות הנתונים,
- * כולל הניקוד שחושב עבורו על ידי אלגוריתם התיעוד.
- * * @author DAVID BEN GIGI
+ * מחלקה המייצגת פריט בודד בתוך הזמנה כצילום מצב (Snapshot).
+ * מחלקה זו קריטית למערכת מאחר והיא שומרת את פרטי המוצר והציון שהאלגוריתם העניק לו
+ * בדיוק ברגע הרכישה, ללא קשר לשינויים עתידיים במלאי או בהעדפות המשתמש.
  */
 public class OrderItem 
 {
-    private String productId;     // מזהה ייחודי של המוצר המקורי
-    private String nameSnapshot;  // שם המוצר כפי שהיה בזמן הרכישה
-    private int priceSnapshot;    // מחיר המוצר בזמן הרכישה ביחידות של סנט
-    private double calculatedScore; // הניקוד שחושב עבור פריט זה על ידי האלגוריתם
+    // מזהה הייחודי של המוצר המקורי במסד הנתונים
+    private String productId;
+
+    // שם המוצר כפי שהופיע בעת ביצוע ההזמנה
+    private String productName;
+
+    // מחיר המוצר בעת הרכישה (מיוצג ביחידות של 10 אגורות)
+    private int price;
+
+    // כתובת ה-URL של תמונת המוצר לצורך תצוגה בהיסטוריה
+    private String imageUrl;
+
+    // הציון (Score) שהאלגוריתם החכם העניק לפריט זה עבור המשתמש הספציפי ברגע הרכישה
+    private double matchScore;
 
     /**
-     * בנאי ברירת מחדל:
-     * נדרש עבור ספריות המערכת לצורך יצירת אובייקט ריק.
+     * בנאי ברירת מחדל (Default Constructor).
+     * נדרש עבור פעולות הסריאליזציה של Spring Data MongoDB.
      */
-    public OrderItem() {}
-
-    /**
-     * בנאי מאתחל עם פרמטרים:
-     * מאפשר יצירת פריט הזמנה מלא עם כל הנתונים הנדרשים בשורה אחת.
-     * * @param productId מזהה המוצר.
-     * @param nameSnapshot שם המוצר המעודכן.
-     * @param priceSnapshot מחיר המוצר המעודכן.
-     * @param calculatedScore הניקוד שחושב לפריט.
-     */
-    public OrderItem(String productId, String nameSnapshot, int priceSnapshot, double calculatedScore) 
+    public OrderItem() 
     {
-        this.productId = productId;
-        this.nameSnapshot = nameSnapshot;
-        this.priceSnapshot = priceSnapshot;
-        this.calculatedScore = calculatedScore;
     }
 
     /**
-     * מחזירה את המזהה של המוצר.
-     * @return מחרוזת המייצגת את מפתח המוצר.
+     * מחזירה את המזהה של המוצר המקורי.
+     * @return מזהה המוצר כמחרוזת.
      */
     public String getProductId() 
     { 
@@ -46,8 +40,8 @@ public class OrderItem
     }
 
     /**
-     * מעדכנת את מזהה המוצר.
-     * @param productId מזהה חדש לעדכון.
+     * מעדכנת את מזהה המוצר עבור פריט ההזמנה.
+     * @param productId מזהה המוצר להגדרה.
      */
     public void setProductId(String productId) 
     { 
@@ -55,56 +49,75 @@ public class OrderItem
     }
 
     /**
-     * מחזירה את שם המוצר כפי שנשמר בהזמנה.
-     * @return מחרוזת של שם המוצר.
+     * מחזירה את שם המוצר שנשמר ב-Snapshot.
+     * @return שם המוצר.
      */
-    public String getNameSnapshot() 
+    public String getProductName() 
     { 
-        return nameSnapshot; 
+        return productName; 
     }
 
     /**
-     * מעדכנת את שם המוצר עבור תיעוד ההזמנה.
-     * @param nameSnapshot שם מוצר חדש לעדכון.
+     * מעדכנת את שם המוצר בתוך פריט ההזמנה.
+     * @param productName שם המוצר לשמירה.
      */
-    public void setNameSnapshot(String nameSnapshot) 
+    public void setProductName(String productName) 
     { 
-        this.nameSnapshot = nameSnapshot; 
+        this.productName = productName; 
     }
 
     /**
-     * מחזירה את מחיר המוצר כפי שנשמר בהזמנה.
-     * @return ערך מספרי של המחיר ביחידות קטנות.
+     * מחזירה את מחיר הפריט כפי שהיה בעת הרכישה.
+     * @return מחיר ביחידות של 10 אגורות.
      */
-    public int getPriceSnapshot() 
+    public int getPrice() 
     { 
-        return priceSnapshot; 
+        return price; 
     }
 
     /**
-     * מעדכנת את מחיר המוצר עבור תיעוד ההזמנה.
-     * @param priceSnapshot מחיר מוצר חדש לעדכון.
+     * מעדכנת את מחיר הפריט עבור ההזמנה.
+     * @param price מחיר לעדכון.
      */
-    public void setPriceSnapshot(int priceSnapshot) 
+    public void setPrice(int price) 
     { 
-        this.priceSnapshot = priceSnapshot; 
+        this.price = price; 
     }
 
     /**
-     * מחזירה את הניקוד שחושב עבור הפריט.
-     * @return ערך מספרי של הניקוד המחושב.
+     * מחזירה את כתובת התמונה של המוצר.
+     * @return נתיב התמונה (URL).
      */
-    public double getCalculatedScore() 
-    {
-        return calculatedScore; 
+    public String getImageUrl() 
+    { 
+        return imageUrl; 
     }
 
     /**
-     * מעדכנת את הניקוד המחושב עבור הפריט.
-     * @param calculatedScore ערך ניקוד חדש להגדרה.
+     * מעדכנת את כתובת התמונה עבור פריט ההזמנה.
+     * @param imageUrl כתובת התמונה להגדרה.
      */
-    public void setCalculatedScore(double calculatedScore) 
+    public void setImageUrl(String imageUrl) 
     { 
-        this.calculatedScore = calculatedScore; 
+        this.imageUrl = imageUrl; 
+    }
+
+    /**
+     * מחזירה את ציון ההתאמה (Match Score) שהאלגוריתם חישב עבור פריט זה.
+     * שדה זה מהווה את לב הפרויקט ומתעד את רמת הרלוונטיות של הבגד למשתמש.
+     * @return ציון ההתאמה המקורי ברגע הרכישה.
+     */
+    public double getMatchScore() 
+    { 
+        return matchScore; 
+    }
+
+    /**
+     * שומרת את ציון ההתאמה שחושב על ידי האלגוריתם כ-Snapshot בתוך ההזמנה.
+     * @param matchScore ציון ההתאמה שחושב.
+     */
+    public void setMatchScore(double matchScore) 
+    { 
+        this.matchScore = matchScore; 
     }
 }

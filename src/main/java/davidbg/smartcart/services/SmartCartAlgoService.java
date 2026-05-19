@@ -57,7 +57,7 @@ public class SmartCartAlgoService
             }
         }   
 
-        // מציאת הנקודה האופטימלית בטווח הכמויות (Min-Max)
+        // מציאת הנקודה האופטימלית בטווח הכמויות 
         double bestScore = -1;
         int bestK = -1;
         int bestW = -1;
@@ -77,7 +77,7 @@ public class SmartCartAlgoService
 
         if (bestScore == -1) return new ArrayList<>();
 
-        // שחזור הפריטים שנבחרו (Backtracking)
+        // שחזור הפריטים שנבחרו 
         List<Product> selected = new ArrayList<>();
         int currK = bestK;
         int currW = bestW;

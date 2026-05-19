@@ -6,51 +6,55 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * הסבר על המחלקה:
- * מחלקה זו מייצגת הזמנה מלאה במערכת. 
- * היא משמשת לשמירת היסטוריית הרכישות וקישור בין משתמש למוצרים.
+ * מחלקה המייצגת הזמנה מלאה במערכת SmartCart.
+ * מחלקה זו משמשת למיפוי מסמכים ב-Collection "Orders" במסד הנתונים MongoDB.
+ * היא מתעדת את היסטוריית הרכישות ומקשרת בין משתמשים למוצרים שנרכשו.
  * * @author DAVID BEN GIGI
  */
 @Document(collection = "Orders")
 public class Order 
 {
     @Id
-    private String id;              // מזהה ייחודי של ההזמנה במסד הנתונים
-    private String userId;          // מזהה המשתמש שביצע את ההזמנה
-    private LocalDateTime orderDate; // תאריך ושעת ביצוע ההזמנה
-    private double totalPrice;      // המחיר הכולל של העסקה
-    private Address shippingAddress; // כתובת היעד למשלוח החבילה
-    private List<OrderItem> items;   // רשימה של פריטי הלבוש שנרכשו
+    private String id;               // מזהה ייחודי של ההזמנה (Primary Key) במסד הנתונים
+    
+    private String userId;           // מזהה המשתמש (User ID) שביצע את ההזמנה לקישור בין טבלאות
+    
+    private LocalDateTime orderDate; // אובייקט המתעד את התאריך והשעה המדויקים של ביצוע הרכישה
+    
+    private double totalPrice;       // המחיר הסופי והכולל של כל פריטי ההזמנה
+    
+    private List<OrderItem> items;   // רשימה מפורטת של פריטי הלבוש (שם, תמונה ומחיר) שנכללו בעסקה
 
     /**
-     * בנאי ברירת מחדל:
-     * נדרש עבור ספריות המערכת לצורך יצירת אובייקט ריק.
+     * בנאי ברירת מחדל (Default Constructor).
+     * נדרש על ידי Spring Data ו-Jackson לצורך יצירת אובייקט ריק וביצוע דה-סריאליזציה.
      */
-    public Order() {}
+    public Order() 
+    {
+    }
 
     /**
-     * בנאי מאתחל עם פרמטרים:
-     * מאפשר יצירת הזמנה חדשה ומילוי כל הנתונים בשורה אחת.
-     * * @param id מזהה ההזמנה.
-     * @param userId מזהה המשתמש.
-     * @param orderDate זמן הרכישה.
-     * @param totalPrice סכום כולל.
-     * @param shippingAddress כתובת למשלוח.
-     * @param items רשימת פריטים.
+     * בנאי מאתחל עם פרמטרים (Parameterized Constructor).
+     * מאפשר יצירת אובייקט הזמנה מלא ומילוי כל נתוניו בעת השמירה למסד הנתונים.
+     * * @param id מזהה ההזמנה
+     * @param userId מזהה המשתמש הרוכש
+     * @param orderDate מועד ביצוע ההזמנה
+     * @param totalPrice הסכום הכולל לתשלום
+     * @param shippingAddress כתובת למשלוח
+     * @param items רשימת הפריטים שנרכשו
      */
-    public Order(String id, String userId, LocalDateTime orderDate, double totalPrice, Address shippingAddress, List<OrderItem> items) 
+    public Order(String id, String userId, LocalDateTime orderDate, double totalPrice, List<OrderItem> items) 
     {
         this.id = id;
         this.userId = userId;
         this.orderDate = orderDate;
         this.totalPrice = totalPrice;
-        this.shippingAddress = shippingAddress;
         this.items = items;
     }
 
     /**
      * מחזירה את המזהה הייחודי של ההזמנה.
-     * @return מחרוזת המייצגת את מפתח ההזמנה.
+     * @return מחרוזת המייצגת את מפתח המסמך.
      */
     public String getId() 
     { 
@@ -67,8 +71,8 @@ public class Order
     }
 
     /**
-     * מחזירה את המזהה של המשתמש בעל ההזמנה.
-     * @return מחרוזת המייצגת את מזהה המשתמש.
+     * מחזירה את המזהה של המשתמש שביצע את ההזמנה.
+     * @return מזהה המשתמש לצורך שיוך ההיסטוריה.
      */
     public String getUserId() 
     { 
@@ -76,7 +80,7 @@ public class Order
     }
 
     /**
-     * מקשרת את ההזמנה למשתמש ספציפי.
+     * מקשרת את ההזמנה למשתמש ספציפי במערכת.
      * @param userId מזהה המשתמש לקישור.
      */
     public void setUserId(String userId) 
@@ -85,8 +89,8 @@ public class Order
     }
 
     /**
-     * מחזירה את זמן ביצוע ההזמנה.
-     * @return אובייקט זמן המכיל תאריך ושעה.
+     * מחזירה את זמן ביצוע ההזמנה מהמסד.
+     * @return אובייקט זמן המכיל תאריך ושעה מדויקים.
      */
     public LocalDateTime getOrderDate() 
     { 
@@ -95,7 +99,7 @@ public class Order
 
     /**
      * מעדכנת את זמן ביצוע ההזמנה.
-     * @param orderDate ערך זמן חדש להגדרה.
+     * @param orderDate ערך זמן חדש (בדרך כלל זמן נוכחי בעת הרכישה).
      */
     public void setOrderDate(LocalDateTime orderDate) 
     { 
@@ -103,8 +107,8 @@ public class Order
     }
 
     /**
-     * מחזירה את המחיר הסופי של ההזמנה.
-     * @return ערך מספרי המייצג את המחיר.
+     * מחזירה את המחיר הסופי של ההזמנה לאחר חישוב.
+     * @return ערך מספרי המייצג את הסכום הכולל.
      */
     public double getTotalPrice() 
     { 
@@ -120,27 +124,10 @@ public class Order
         this.totalPrice = totalPrice; 
     }
 
-    /**
-     * מחזירה את כתובת המשלוח המקושרת.
-     * @return אובייקט המכיל את פרטי הכתובת.
-     */
-    public Address getShippingAddress() 
-    { 
-        return shippingAddress; 
-    }
 
     /**
-     * מעדכנת את כתובת היעד למשלוח.
-     * @param shippingAddress אובייקט כתובת חדש.
-     */
-    public void setShippingAddress(Address shippingAddress) 
-    { 
-        this.shippingAddress = shippingAddress; 
-    }
-
-    /**
-     * מחזירה את רשימת הפריטים המופיעים בהזמנה.
-     * @return רשימה המכילה את נתוני המוצרים.
+     * מחזירה את רשימת הפריטים המופיעים בתוך ההזמנה.
+     * @return רשימה של אובייקטי OrderItem המכילים את פרטי המוצרים שנרכשו.
      */
     public List<OrderItem> getItems() 
     { 
@@ -148,7 +135,7 @@ public class Order
     }
 
     /**
-     * מעדכנת את רשימת הפריטים בהזמנה.
+     * מעדכנת את רשימת הפריטים הכלולים בהזמנה.
      * @param items רשימת מוצרים חדשה לעדכון.
      */
     public void setItems(List<OrderItem> items) 
