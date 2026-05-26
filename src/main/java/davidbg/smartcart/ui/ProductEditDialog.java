@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 public class ProductEditDialog extends Dialog 
 {
-    public ProductEditDialog(ProductService service, Product product, Runnable onSave) 
+    public ProductEditDialog(ProductService productService, Product product, Runnable onSave) 
     {
         // אם product הוא null, יוצרים אובייקט חדש. אם לא, משתמשים בקיים.
         final Product p = (product != null) ? product : new Product();
@@ -71,7 +71,7 @@ public class ProductEditDialog extends Dialog
                 }
 
                 // שליחה לשירות השמירה
-                service.addProductToDB(p);
+                productService.addProductToDB(p);
                 
                 Notification.show("המוצר " + p.getName() + " נשמר בהצלחה!");
                 

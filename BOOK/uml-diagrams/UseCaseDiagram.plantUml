@@ -1,0 +1,48 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor LightBlue
+  BorderColor DarkBlue
+  ArrowColor Black
+}
+
+actor "אורח (Guest)" as Guest
+actor "לקוח רשום (Client)" as Client
+actor "מנהל (Admin)" as Admin
+
+' קשרי ירושה נקיים בין השחקנים
+Client --|> Guest
+Admin --|> Client
+
+rectangle "מערכת הסל החכם (Smart Cart System)" {
+  ' מקרי שימוש של אורח
+  usecase "הרשמה / התחברות למערכת" as UC1
+  usecase "צפייה בקטלוג המוצרים הכללי" as UC2
+  
+  ' מקרי שימוש של לקוח רשום
+  usecase "הפעלת אלגוריתם הסל החכם" as UC3
+  usecase "ניהול עגלת קניות וביצוע רכישה" as UC4
+  usecase "צפייה בהיסטוריית הזמנות אישית" as UC5
+  
+  ' מקרי שימוש של מנהל מערכת
+  usecase "ניהול קטלוג מוצרים ומלאי" as UC6
+  usecase "ניהול דינמי של תגיות השאלון" as UC7
+  usecase "בקרת נתוני משתמשים וסטטיסטיקות" as UC8
+}
+
+' חיבור משתמש אורח
+Guest --> UC1
+Guest --> UC2
+
+' חיבור משתמש רשום (יורש אוטומטית את פעולות האורח)
+Client --> UC3
+Client --> UC4
+Client --> UC5
+
+' חיבור אדמין (יורש אוטומטית את פעולות הלקוח והאורח)
+Admin --> UC6
+Admin --> UC7
+Admin --> UC8
+
+@enduml

@@ -1,0 +1,25 @@
+@startuml
+skinparam maxMessageSize 150
+actor "Client" as Client
+participant "CartView\n(UI)" as UI
+participant "OrderService\n(Backend)" as Service
+participant "OrderRepository\n(DB)" as DB
+
+Client -> UI : Review cart & click Place Order
+Note over UI: Fetch currentUser and cartProducts\nfrom VaadinSession attributes
+
+UI -> Service : addOrderToDB(newOrder)
+activate Service
+
+Service -> DB : save(order)
+activate DB
+DB --> Service : confirm save success in MongoDB
+deactivate DB
+
+Service --> UI : return success confirmation
+deactivate Service
+
+Note over UI: Clear temporary session cart
+
+UI -> Client : Display order success screen
+@enduml

@@ -1,0 +1,23 @@
+@startuml
+skinparam maxMessageSize 150
+actor "Client" as Client
+participant "HistoryView\n(UI)" as UI
+participant "OrderService\n(Backend)" as Service
+participant "OrderRepository\n(DB)" as DB
+
+Client -> UI : Navigate to Order History view
+UI -> Service : getOrdersForUser(user.getId())
+activate Service
+
+Service -> DB : findByUserId(userId)
+activate DB
+DB --> Service : return List<Order>
+deactivate DB
+
+Service --> UI : return historical orders collection
+deactivate Service
+
+Note over UI: Bind order items into Grid view component\nshowing dates, totals, and scores
+
+UI -> Client : Populate grid with user purchase history
+@enduml

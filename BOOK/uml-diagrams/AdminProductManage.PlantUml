@@ -1,0 +1,73 @@
+@startuml
+skinparam linetype ortho
+top to bottom direction
+
+' --- שכבת UI והמסכים ---
+package "2. UI Layer (Screens & Components)" {
+    class MainLayout 
+    class HomeView 
+    class SmartCartView 
+    class CartView 
+    class AdminView 
+    class HistoryView 
+    class RegistrationView 
+    class WeatherRecommendationSection 
+    class ProductCard 
+    class QuestionnaireAdminDialog
+    class ProductEditDialog 
+    class LoginView 
+    class AdminProductTab 
+    class AdminUserTab 
+    class AdminOrdersTab 
+    class AdminStatsTab 
+    class ShopView 
+
+    
+package "3. Service Layer" 
+{
+    class WeatherService
+    class ProductService
+    class UserService
+    class OrderService
+    class SmartCartAlgoService
+    class TagFieldService
+    class ScoringService
+}
+
+CartView --> OrderService
+QuestionnaireAdminDialog --> TagFieldService
+AdminView --> AdminProductTab
+AdminView --> AdminUserTab
+AdminView --> AdminOrdersTab
+AdminView --> AdminStatsTab
+HomeView --> WeatherRecommendationSection
+'HomeView --> ProductService
+ShopView --> ProductService
+SmartCartView --> SmartCartAlgoService
+SmartCartView --> ScoringService
+SmartCartView --> TagFieldService
+SmartCartView --> ProductService
+'AdminView --> UserService
+'AdminView --> ProductService
+'AdminView --> OrderService
+HistoryView --> OrderService
+WeatherRecommendationSection --> WeatherService
+WeatherRecommendationSection --> ProductService
+WeatherRecommendationSection --> UserService
+RegistrationView --> UserService
+LoginView --> UserService
+ProductEditDialog --> ProductService
+AdminUserTab --> UserService
+AdminProductTab --> ProductService
+AdminOrdersTab --> OrderService
+AdminStatsTab --> OrderService
+ShopView --> ProductCard
+WeatherRecommendationSection --> ProductCard
+SmartCartView --> ProductCard
+SmartCartView --> QuestionnaireAdminDialog
+}
+@enduml
+
+
+
+

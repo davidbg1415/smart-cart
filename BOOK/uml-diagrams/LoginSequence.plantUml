@@ -1,0 +1,25 @@
+@startuml
+skinparam maxMessageSize 150
+actor "Guest" as Guest
+participant "LoginView\n(UI)" as UI
+participant "UserService\n(Backend)" as Service
+participant "UserRepository\n(DB)" as DB
+
+Guest -> UI : Input Details & click "Login"
+UI -> Service : authenticate(username, password)
+activate Service
+
+Service -> DB : findByEmailAndPassword(email, password)
+activate DB
+DB --> Service : return Optional<User>
+deactivate DB
+
+Note over Service: Verify password matches hash\nand fetch User Role
+
+Service --> UI : return User object (or empty)
+deactivate Service
+
+Note over UI: If authenticated, set User into\nVaadinSession attributes
+
+UI -> Guest : Update MainLayout & navigate to HomeView
+@enduml

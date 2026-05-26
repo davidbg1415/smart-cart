@@ -17,13 +17,10 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
 import davidbg.smartcart.datamodels.Order;
-import davidbg.smartcart.datamodels.OrderItem;
 import davidbg.smartcart.datamodels.Product;
 import davidbg.smartcart.datamodels.User;
 import davidbg.smartcart.services.OrderService;
-import davidbg.smartcart.utilities.MainLayout;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -190,30 +187,8 @@ private void processPayment()
             User currentUser = (User) VaadinSession.getCurrent().getAttribute("user");
             List<Product> cartProducts = (List<Product>) VaadinSession.getCurrent().getAttribute("cart");
 
-            // יצירת אובייקט ההזמנה
-            Order newOrder = new Order();
-            newOrder.setUserId(currentUser.getId());
-            newOrder.setOrderDate(LocalDateTime.now());
-            
-            // חישוב סכום סופי
-            double total = cartProducts.stream().mapToDouble(p -> p.getPrice() / 10.0).sum();
-            newOrder.setTotalPrice(total);
-
-            // המרה של רשימת ה-Product לרשימת OrderItem (כדי שלא יהיה 0 פריטים)
-            List<OrderItem> orderItems = new ArrayList<>();
-            for (Product p : cartProducts) 
-            {
-                OrderItem item = new OrderItem();
-                item.setProductId(p.getId());
-                item.setProductName(p.getName()); // שמירת השם בהזמנה
-                item.setPrice(p.getPrice());
-                item.setImageUrl(p.getImageUrl()); // שמירת התמונה בהזמנה
-                orderItems.add(item);
-                
-            }
-            newOrder.setItems(orderItems);
-
-            // שמירה למסד הנתונים
+            // ה-UI "טיפש" עכשיו! הוא רק קורא לסרוויס שיבנה את ההזמנה וישמור אותה
+            Order newOrder = orderService.createOrderFromCart(currentUser.getId(), cartProducts);
             orderService.addOrderToDB(newOrder);
 
             // --- שלב ב: עדכון ממשק המשתמש ---

@@ -3,9 +3,7 @@ package davidbg.smartcart.ui;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -16,7 +14,6 @@ import davidbg.smartcart.datamodels.User;
 import davidbg.smartcart.services.ProductService;
 import davidbg.smartcart.services.UserService;
 import davidbg.smartcart.services.WeatherService;
-import davidbg.smartcart.utilities.ProductCard;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,8 +28,7 @@ public class WeatherRecommendationSection extends VerticalLayout
     private final VerticalLayout missingCityLayout = new VerticalLayout();
     private final Span infoLabel = new Span();
 
-    public WeatherRecommendationSection(WeatherService weatherService, ProductService productService, 
-                                        UserService userService) 
+    public WeatherRecommendationSection(WeatherService weatherService, ProductService productService, UserService userService) 
     {
         this.weatherService = weatherService;
         this.productService = productService;
@@ -117,7 +113,11 @@ public class WeatherRecommendationSection extends VerticalLayout
         double temp = weatherService.getTemperature(city);
         String englishTag = weatherService.getWeatherTag(temp);
         String hebrewTagName = weatherService.getWeatherHebrewName(englishTag);
-        
+
+        // 1. אומרים לדפדפן לרנדר את הרכיב הספציפי הזה מימין לשמאל
+        infoLabel.getElement().setAttribute("dir", "rtl");
+
+        // 2. מזינים את המחרוזת הרגילה שלך (בלי תגיות HTML ידניות)
         infoLabel.setText(String.format("הטמפרטורה ב-%s היא %.1f°C. הנה פריטי %s מומלצים:", city, temp, hebrewTagName));
         infoLabel.getStyle().set("font-weight", "500").set("color", "#475569").set("font-size", "14px");
 

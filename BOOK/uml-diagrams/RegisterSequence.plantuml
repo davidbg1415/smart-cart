@@ -1,0 +1,28 @@
+@startuml
+skinparam maxMessageSize 150
+actor "Guest" as Guest
+participant "RegistrationView\n(UI)" as UI
+participant "UserService\n(Backend)" as Service
+participant "UserRepository\n(DB)" as DB
+
+Guest -> UI : Input details & click Register
+UI -> Service : registerUser(user)
+activate Service
+
+Service -> DB : existsByUsername(user.getUsername())
+activate DB
+DB --> Service : return boolean (true/false)
+deactivate DB
+
+Note over Service: If false, encrypt password\nand prepare profile
+
+Service -> DB : save(user)
+activate DB
+DB --> Service : return saved User document
+deactivate DB
+
+Service --> UI : return success / throw Exception
+deactivate Service
+
+UI -> Guest : Show notification & navigate to LoginView
+@enduml

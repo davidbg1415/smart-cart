@@ -1,0 +1,30 @@
+@startuml
+skinparam maxMessageSize 150
+actor "Client" as Client
+participant "SmartCartView\n(UI)" as UI
+participant "SmartCartAlgoService\n(Backend)" as Algo
+participant "ScoringService\n(Backend)" as Score
+participant "ProductRepository\n(DB)" as DB
+
+Client -> UI : Input preferences, budget, quantities & click Calculate
+UI -> Algo : calculateSmartCart(preferences, budget, quantities)
+activate Algo
+
+Algo -> DB : findAll()
+activate DB
+DB --> Algo : return all inventory products
+deactivate DB
+
+Algo -> Score : calculateScores(preferences, productTags)
+activate Score
+Note over Score: Match user preferences\nwith dynamic product tags
+Score --> Algo : return compatibility scores
+deactivate Score
+
+Note over Algo: Execute 3D Knapsack algorithm\nto optimize total score within limits
+
+Algo --> UI : return optimized clothing package
+deactivate Algo
+
+UI -> Client : Render recommended smart cart items
+@enduml

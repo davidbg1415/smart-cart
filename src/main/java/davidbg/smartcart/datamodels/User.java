@@ -2,7 +2,6 @@ package davidbg.smartcart.datamodels;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import java.util.List;
 
 /**
  * הסבר על המחלקה:
@@ -18,8 +17,6 @@ public class User
     private String fullName;         // שם מלא של המשתמש
     private String email;            // כתובת אימייל המשמשת גם כשם משתמש
     private String password;         // סיסמת התחברות (נשמרת בצורה מוצפנת)
-    private String phone;            // מספר טלפון ליצירת קשר
-    private List<String> preferences; // רשימת תגיות המייצגות את העדפות הלבוש של המשתמש
     private String City;  // כתובת ברירת המחדל למשלוחים
     private Role role; // ADMIN, REGISTERED_USER
 
@@ -40,14 +37,12 @@ public class User
      * @param preferences רשימת העדפות.
      * @param defaultAddress כתובת למשלוח.
      */
-    public User(String id, String fullName, String email, String password, String phone, List<String> preferences, String city ) 
+    public User(String id, String fullName, String email, String password, String city ) 
     {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
-        this.phone = phone;
-        this.preferences = preferences;
         this.City = city;
     }
 
@@ -123,43 +118,6 @@ public class User
         this.password = password; 
     }
 
-    /**
-     * מחזירה את מספר הטלפון של המשתמש.
-     * @return מחרוזת של מספר הטלפון.
-     */
-    public String getPhone() 
-    { 
-        return phone;
-    }
-
-    /**
-     * מעדכנת את מספר הטלפון של המשתמש.
-     * @param phone מספר טלפון חדש.
-     */
-    public void setPhone(String phone) 
-    { 
-        this.phone = phone; 
-    }
-
-    /**
-     * מחזירה את רשימת ההעדפות האישיות של המשתמש.
-     * @return רשימה של תגיות סגנון מועדפות.
-     */
-    public List<String> getPreferences() 
-    { 
-        return preferences; 
-    }
-
-    /**
-     * מעדכנת את רשימת ההעדפות של המשתמש.
-     * @param preferences רשימת תגיות חדשה.
-     */
-    public void setPreferences(List<String> preferences) 
-    { 
-        this.preferences = preferences; 
-    }
-
-   
     public Role getRole() 
     { 
         return role; 

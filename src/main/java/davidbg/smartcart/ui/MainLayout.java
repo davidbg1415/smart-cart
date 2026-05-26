@@ -1,4 +1,4 @@
-package davidbg.smartcart.utilities;
+package davidbg.smartcart.ui;
 
 import java.util.List;
 import com.vaadin.flow.component.ComponentUtil;
@@ -73,6 +73,15 @@ public class MainLayout extends AppLayout implements BeforeEnterObserver
 
         // 1. יצירת תפריט הניווט (צד ימין/מרכז)
         HorizontalLayout navigation = new HorizontalLayout();
+        Span logo = new Span("SmartCart");
+        logo.getStyle()
+                .set("font-size", "30px") // הגודל שביקשת!
+                .set("font-weight", "bold")
+                .set("color", "#2563eb") // הצבע הכחול של הלוגו שלך
+                .set("margin-left", "20px") // קצת רווח מהתפריט
+                .set("cursor", "pointer"); // סמן עכבר של לחיצה
+        navigation.add(logo);
+        // הוספת לוגו טקסטואלי מעוצב
         navigation.add(createNavButton("בית", VaadinIcon.HOME, ""));
         navigation.add(createNavButton("חנות", VaadinIcon.SHOP, "shop"));
 

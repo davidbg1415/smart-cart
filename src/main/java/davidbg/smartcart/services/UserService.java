@@ -66,7 +66,7 @@ public class UserService {
     }
 
      /**
-     * מחיקת משתמש.
+     * עדכון משתמש שקיים .
      */
     public void updateUser(User user) 
     {

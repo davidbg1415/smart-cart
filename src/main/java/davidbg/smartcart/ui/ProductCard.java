@@ -1,4 +1,4 @@
-package davidbg.smartcart.utilities;
+package davidbg.smartcart.ui;
 
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
@@ -13,6 +13,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.server.VaadinSession;
 import davidbg.smartcart.datamodels.Product;
 import davidbg.smartcart.datamodels.User;
+
+
 import java.util.ArrayList;
 import java.util.List;
 

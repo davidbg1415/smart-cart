@@ -7,7 +7,6 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -16,7 +15,7 @@ import davidbg.smartcart.datamodels.User;
 import davidbg.smartcart.services.ProductService;
 import davidbg.smartcart.services.UserService;
 import davidbg.smartcart.services.WeatherService;
-import davidbg.smartcart.utilities.MainLayout;
+
 
 /**
  * מחלקת HomeView מייצגת את דף הנחיתה הראשי של האפליקציה.
@@ -52,9 +51,6 @@ private final UserService userService;
         // הגדרת רקע מדורג (Gradient) למראה מודרני
         getStyle().set("background", "linear-gradient(to bottom, #ffffff, #f1f5f9)");
 
-        // 3. יצירת רכיב הכותרת העליונה (Header) המקומי
-        createHeader(currentUser);
-
         // 4. יצירת מיכל לתוכן המרכזי של הדף כדי לשמור על גבולות רוחב נוחים לקריאה
         VerticalLayout content = new VerticalLayout();
         content.setAlignItems(Alignment.CENTER);
@@ -74,30 +70,7 @@ private final UserService userService;
         add(content);
     }
 
-    /**
-     * יצירת ה-Header המקומי של הדף.
-     */
-    private void createHeader(User user) 
-    {
-        HorizontalLayout header = new HorizontalLayout();
-        header.setWidthFull();
-        header.setPadding(true);
-        header.setJustifyContentMode(JustifyContentMode.BETWEEN); // פיזור רכיבים לקצוות
-        header.setAlignItems(Alignment.CENTER);
-        
-        // עיצוב ה-Header עם צבע לבן וצללית עדינה
-        header.getStyle()
-                .set("background-color", "white")
-                .set("box-shadow", "0 2px 4px rgba(0,0,0,0.05)");
-
-        // הוספת לוגו טקסטואלי מעוצב
-        H2 logo = new H2("SmartCart");
-        logo.getStyle().set("color", "#2563eb").set("margin", "0");
-        
-        header.add(logo);
-        add(header);
-    }
-
+    
     /**
      * בניית תצוגת האורח (Guest View).
      */
@@ -148,10 +121,10 @@ private final UserService userService;
  */
 private void buildAuthenticatedView(VerticalLayout layout, User user) 
 {
-    H1 welcome = new H1("ברוך הבא, " + user.getFullName());
+    H1 welcome = new H1("ברוך הבא  " + user.getFullName());
     welcome.getStyle().set("margin-top", "30px").set("margin-bottom", "5px");
     
-    Span info = new Span("מה תרצה לעשות היום?");
+    Span info = new Span("מה תרצה לעשות");
     info.getStyle().set("color", "#64748b").set("margin-bottom", "15px");
 
     // 1. יצירת גריד כרטיסי הניווט (התפריט הראשי)
@@ -164,9 +137,6 @@ private void buildAuthenticatedView(VerticalLayout layout, User user)
     menuGrid.add(createMenuCard("סל חכם", "הפעלת אלגוריתם התאמה", VaadinIcon.MAGIC, "smart-cart"));
     menuGrid.add(createMenuCard("היסטוריה", "הזמנות קודמות שלי", VaadinIcon.TIME_BACKWARD, "history"));
 
-    if (user.getRole() == davidbg.smartcart.datamodels.Role.ADMIN) {
-        menuGrid.add(createMenuCard("ניהול אתר", "הוספה ועריכת פריטים", VaadinIcon.PACKAGE, "admin"));
-    }
 
     // 2. יצירת רכיב המלצות מזג האוויר והזנת הנתונים
     WeatherRecommendationSection weatherSection = new WeatherRecommendationSection(

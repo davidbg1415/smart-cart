@@ -16,9 +16,7 @@ import com.vaadin.flow.router.Route;
 import davidbg.smartcart.datamodels.Role;
 import davidbg.smartcart.datamodels.User;
 import davidbg.smartcart.services.UserService;
-import davidbg.smartcart.utilities.MainLayout;
 
-import java.util.ArrayList;
 
 /**
  * מחלקת RegistrationView מנהלת את דף הרשמת המשתמשים החדשים למערכת.
@@ -46,7 +44,7 @@ public class RegistrationView extends VerticalLayout
         getStyle().set("background", "linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)");
 
         // 2. יצירת כותרת הדף
-        H2 title = new H2("יצירת חשבון SmartCart חדש");
+        H2 title = new H2("יצירת חשבון חדש");
         title.getStyle().set("color", "#2c3e50");
 
         // 3. הגדרת שדות הקלט עבור טופס ההרשמה
@@ -54,12 +52,11 @@ public class RegistrationView extends VerticalLayout
         EmailField email = new EmailField("כתובת אימייל");
         PasswordField password = new PasswordField("סיסמה");
         PasswordField confirmPassword = new PasswordField("אימות סיסמה");
-        TextField phone = new TextField("מספר טלפון");
         TextField city = new TextField(" עיר מגורים");
 
         // 4. סידור השדות בתוך FormLayout לקבלת מראה רספונסיבי (מותאם למסכים שונים)
         FormLayout formLayout = new FormLayout();
-        formLayout.add(fullName, email, phone, city, password, confirmPassword);
+        formLayout.add(fullName, email, city, password, confirmPassword);
         
         // הגדרת פריסת השדות: שדה אחד במסך קטן, שני שדות בשורה במסך רחב מ-500 פיקסלים
         formLayout.setResponsiveSteps(
@@ -83,11 +80,9 @@ public class RegistrationView extends VerticalLayout
             newUser.setFullName(fullName.getValue());
             newUser.setEmail(email.getValue());
             newUser.setPassword(password.getValue()); // בשלב זה נשמר כטקסט חשוף (מומלץ להוסיף הצפנה בעתיד)
-            newUser.setPhone(phone.getValue());
             
             // ג. קביעת ערכי ברירת מחדל למשתמש חדש (תפקיד משתמש רגיל ורשימת העדפות ריקה)
             newUser.setRole(Role.REGISTERED_USER);
-            newUser.setPreferences(new ArrayList<>());
 
             // ד. פנייה לשירות המשתמשים לצורך ביצוע הרישום בפועל במסד הנתונים
             boolean success = userService.registerNewUser(newUser);

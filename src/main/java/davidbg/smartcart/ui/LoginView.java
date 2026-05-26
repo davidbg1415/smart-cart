@@ -17,7 +17,7 @@ import com.vaadin.flow.server.VaadinSession;
 import davidbg.smartcart.datamodels.Product;
 import davidbg.smartcart.datamodels.User;
 import davidbg.smartcart.services.UserService;
-import davidbg.smartcart.utilities.MainLayout;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,6 @@ public class LoginView extends VerticalLayout
         i18nForm.setUsername("אימייל");
         i18nForm.setPassword("סיסמה");
         i18nForm.setSubmit("התחבר");
-        i18nForm.setForgotPassword("שכחתי סיסמה");
         i18n.setForm(i18nForm);
 
         // הגדרת הודעת השגיאה שתופיע במקרה של פרטים לא נכונים

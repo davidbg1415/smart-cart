@@ -1,0 +1,23 @@
+@startuml
+skinparam actorStyle awesome
+skinparam componentStyle uml2
+
+' הגדרת העיגול המרכזי
+node "מודלי המערכת\nSYSTEM MODELS" as Center #2563eb;line:white;text:white {
+}
+
+' הגדרת העיגולים מסביב
+circle "ניהול פרופיל\nוהרשאות" as UC1
+circle "קטלוג וחיפוש\nמוצרים" as UC2
+circle "אלגוריתם\nהסל החכם" as UC3
+circle "ניהול הזמנות\nותשלום" as UC4
+circle "לוח בקרה\nוסטטיסטיקה" as UC5
+
+' חיבורים
+Center --> UC1
+Center --> UC2
+Center --> UC3
+Center --> UC4
+Center --> UC5
+
+@enduml

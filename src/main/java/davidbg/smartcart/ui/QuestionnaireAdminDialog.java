@@ -12,7 +12,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import davidbg.smartcart.datamodels.TagField;
 import davidbg.smartcart.services.TagFieldService;
 
-public class QuestionnaireAdminDialog extends Dialog {
+public class QuestionnaireAdminDialog extends Dialog 
+{
     private final TagFieldService tagFieldService;
     private final VerticalLayout fieldsContainer = new VerticalLayout();
     private final Runnable onChangeCallback; // פונקציה שתרענן את דף השאלון הראשי כשנסגר

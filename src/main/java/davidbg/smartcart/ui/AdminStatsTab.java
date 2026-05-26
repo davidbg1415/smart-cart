@@ -5,13 +5,9 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
-import davidbg.smartcart.datamodels.Order;
-import davidbg.smartcart.datamodels.OrderItem;
 import davidbg.smartcart.services.OrderService;
 
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * טאב סטטיסטיקה ונתונים יבשים - מציג מוצרים מובילים וגרפים ויזואליים של מכירות.
@@ -24,37 +20,21 @@ public class AdminStatsTab extends VerticalLayout
         setPadding(true);
         setSpacing(true);
 
-        List<Order> orders = orderService.getAllOrders();
-
-        // 1. חישוב נתונים יבשים בסיסיים
-        int totalOrders = orders.size();
-        long totalItemsSold = orders.stream()
-                .filter(o -> o.getItems() != null)
-                .mapToLong(o -> o.getItems().size())
-                .sum();
+        // 1. קריאת הנתונים המוכנים ישירות מה-Service (ה-UI טיפש ונקי!)
+        int totalOrders = orderService.getAllOrders().size();
+        long totalItemsSold = orderService.getTotalItemsSold();
+        String topProduct = orderService.getTopSellingProduct();
+        Map<String, Long> productCounts = orderService.getProductPopularity();
+        long topProductCount = productCounts.getOrDefault(topProduct, 0L);
 
         // קופסאות נתונים עליונות (Cards)
         HorizontalLayout cardsLayout = new HorizontalLayout();
         cardsLayout.setWidthFull();
         cardsLayout.add(
             createStatCard("סך הכל הזמנות", String.valueOf(totalOrders), "#3b82f6"),
-            createStatCard("פריטים שנמכרו", String.valueOf(totalItemsSold), "#a855f7")
+            createStatCard("פריטים שנמכרו", String.valueOf(totalItemsSold), "#a855f7"),
+            createStatCard("המוצר הכי נמכר", topProduct + " (" + topProductCount + " יח')", "#f59e0b")
         );
-
-        // 2. חישוב המוצר הכי נמכר (אלגוריתם חלוקה וספירה מבוסס סטרים)
-        Map<String, Long> productCounts = orders.stream()
-                .filter(o -> o.getItems() != null)
-                .flatMap(o -> o.getItems().stream())
-                .collect(Collectors.groupingBy(OrderItem::getProductName, Collectors.counting()));
-
-        // שליפת המוצר המוביל
-        String topProduct = productCounts.entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse("אין נתונים עדיין");
-
-        long topProductCount = productCounts.getOrDefault(topProduct, 0L);
-        cardsLayout.add(createStatCard("המוצר הכי נמכר", topProduct + " (" + topProductCount + " יח')", "#f59e0b"));
 
         // 3. יצירת גרף עמודות ויזואלי באמצעות ProgressBar לפילוח קטגוריות
         VerticalLayout chartLayout = new VerticalLayout();

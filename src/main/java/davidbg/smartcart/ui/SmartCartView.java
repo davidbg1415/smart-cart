@@ -20,9 +20,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import davidbg.smartcart.datamodels.*;
 import davidbg.smartcart.services.*;
-import davidbg.smartcart.utilities.MainLayout;
-import davidbg.smartcart.utilities.ProductCard;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -284,7 +281,7 @@ private void runSmartAlgoWithProgress()
         // הוספת כרטיס לכל מוצר שנבחר - שימוש חוזר מושלם ב-ProductCard (קומפקטי = true)!
         for (Product p : resultBundle) 
         {
-            ProductCard card = new ProductCard(p, true); 
+            ProductCard card = new ProductCard(p); 
             resultGrid.add(card);
         }
     }

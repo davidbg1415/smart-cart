@@ -1,0 +1,23 @@
+@startuml
+skinparam maxMessageSize 150
+actor "User" as User
+participant "ShopView\n(UI)" as UI
+participant "ProductService\n(Backend)" as Service
+participant "ProductRepository\n(DB)" as DB
+
+User -> UI : Access shop section
+UI -> Service : getAllProducts()
+activate Service
+
+Service -> DB : findAll()
+activate DB
+DB --> Service : return List<Product>
+deactivate DB
+
+Service --> UI : return complete product list
+deactivate Service
+
+Note over UI: Iterate list and create\nProductCard components dynamically
+
+UI -> User : Render catalog items layout on screen
+@enduml

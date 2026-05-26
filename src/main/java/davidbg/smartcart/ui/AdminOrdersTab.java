@@ -13,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * טאב פיננסי המציג את כל הרכישות ומשקלל רווחים לפי חודשים.
@@ -32,8 +31,8 @@ public class AdminOrdersTab extends VerticalLayout
 
         List<Order> allOrders = orderService.getAllOrders();
         
-        // 1. חישוב רווח כולל (ברוטו)
-        double totalRevenue = allOrders.stream().mapToDouble(Order::getTotalPrice).sum();
+        // 1. חישוב רווח כולל (ברוטו) - הקריאה עברה ל-Service!
+        double totalRevenue = orderService.calculateTotalRevenue();
 
         H2 revenueTitle = new H2(String.format("%.2f ₪", totalRevenue));
         revenueTitle.getStyle().set("color", "#22c55e").set("margin", "0");
@@ -43,7 +42,7 @@ public class AdminOrdersTab extends VerticalLayout
 
         // 2. הגדרת טבלאות
         setupOrderGrid();
-        setupMonthlyGrid(allOrders);
+        setupMonthlyGrid(); // שמתי לב שהורדתי את הפרמטר, כבר לא צריך לשלוח את הרשימה
 
         // סידור המסך: בצד אחד רווח חודשי, בצד שני רשימת ההזמנות
         HorizontalLayout tablesLayout = new HorizontalLayout(monthlyGrid, orderGrid);
@@ -67,22 +66,15 @@ public class AdminOrdersTab extends VerticalLayout
     }
 
     /**
-     * לוגיקה לקיבוץ וחישוב רווחים לפי חודשים (Stream API)
+     * לוגיקה לקיבוץ וחישוב רווחים לפי חודשים (נשאבת מה-Service)
      */
-    private void setupMonthlyGrid(List<Order> orders) 
+    private void setupMonthlyGrid() 
     {
         monthlyGrid.addColumn(MonthRevenueRow::getMonth).setHeader("חודש / שנה");
         monthlyGrid.addColumn(row -> String.format("%.2f ₪", row.getRevenue())).setHeader("סך הכל רווח");
 
-        // קיבוץ ההזמנות לפי חודש ושנה (למשל: "05/2026")
-        DateTimeFormatter monthYearFormatter = DateTimeFormatter.ofPattern("MM/yyyy");
-        
-        Map<String, Double> revenueByMonth = orders.stream()
-            .filter(o -> o.getOrderDate() != null)
-            .collect(Collectors.groupingBy(
-                o -> o.getOrderDate().format(monthYearFormatter),
-                Collectors.summingDouble(Order::getTotalPrice)
-            ));
+        // ה-UI טיפש! הוא פשוט מבקש את המפה מה-Service:
+        Map<String, Double> revenueByMonth = orderService.getMonthlyRevenue();
 
         // המרת המפה לרשימה עבור הטבלה
         List<MonthRevenueRow> monthlyRows = new ArrayList<>();

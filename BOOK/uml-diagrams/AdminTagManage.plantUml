@@ -1,0 +1,35 @@
+@startuml
+skinparam maxMessageSize 150
+actor "Admin" as Admin
+participant "SmartCartView\n(UI Main)" as MainUI
+participant "QuestionnaireAdminDialog\n(UI Dialog)" as Dialog
+participant "TagFieldService\n(Backend)" as Service
+participant "TagFieldRepository\n(DB)" as DB
+
+Admin -> MainUI : Navigate to Smart Cart view
+activate MainUI
+Note over MainUI: Detect Admin Role and display\nexclusive "Edit Survey" button
+
+Admin -> MainUI : Click "Edit Survey" button
+MainUI -> Dialog ** : Open QuestionnaireAdminDialog form
+activate Dialog
+
+Admin -> Dialog : Modify categories/tags & click "Save"
+Dialog -> Service : saveTagField(tagField)
+activate Service
+
+Service -> DB : save(tagField)
+activate DB
+DB --> Service : confirm save success in MongoDB
+deactivate DB
+
+Service --> Dialog : return success confirmation
+deactivate Service
+
+Note over Dialog: Close dialog form
+Dialog --> MainUI : trigger survey layout refresh
+deactivate Dialog
+
+MainUI -> Admin : Display updated dynamic questionnaire
+deactivate MainUI
+@enduml

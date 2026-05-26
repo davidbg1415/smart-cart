@@ -15,8 +15,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.orderedlayout.FlexLayout.FlexWrap;
 import davidbg.smartcart.datamodels.Product;
 import davidbg.smartcart.services.ProductService;
-import davidbg.smartcart.utilities.MainLayout;
-import davidbg.smartcart.utilities.ProductCard;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
