@@ -15,7 +15,6 @@ import davidbg.smartcart.datamodels.OrderItem;
 import davidbg.smartcart.datamodels.User;
 import davidbg.smartcart.services.OrderService;
 
-
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -24,8 +23,12 @@ import java.util.List;
 public class HistoryView extends VerticalLayout implements BeforeEnterObserver
 {
 
+     private final OrderService orderService;
+
     public HistoryView(OrderService orderService) 
     {
+        this.orderService = orderService;
+
         setAlignItems(Alignment.CENTER);
         setPadding(true);
 

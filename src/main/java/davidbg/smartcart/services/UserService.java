@@ -13,11 +13,13 @@ import davidbg.smartcart.repositories.UserRepository;
  * @author DAVID BEN GIGI
  */
 @Service
-public class UserService {
+public class UserService 
+{
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository) 
+    {
         this.userRepository = userRepository;
     }
 
@@ -28,12 +30,14 @@ public class UserService {
     public boolean registerNewUser(User user) 
     {
         // בדיקה אם האימייל (שמשמש כשם משתמש) כבר קיים
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) 
+        {
             return false;
         }
 
         // הגדרת תפקיד ברירת מחדל אם לא הוגדר
-        if (user.getRole() == null) {
+        if (user.getRole() == null) 
+        {
             user.setRole(Role.REGISTERED_USER);
         }
 
@@ -45,7 +49,8 @@ public class UserService {
      * אימות פרטי התחברות (Login):
      * מחזיר Optional כדי שה-UI יוכל לטפל במקרה של "לא נמצא" בקלות.
      */
-    public Optional<User> login(String email, String password) {
+    public Optional<User> login(String email, String password) 
+    {
         // מציאת משתמש שתואם גם לאימייל וגם לסיסמה
         return userRepository.findByEmailAndPassword(email, password);
     }
@@ -53,7 +58,8 @@ public class UserService {
     /**
      * שליפת כל המשתמשים.
      */
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers() 
+    {
         return userRepository.findAll();
     }
 

@@ -1,0 +1,57 @@
+@startuml
+' הגדרות עיצוב כדי לתת מראה נקי הדומה לתרשים של סביבת הפיתוח
+skinparam packageStyle rectangle
+skinparam class {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor #888888
+}
+skinparam interface {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor #888888
+}
+
+package "UI Layer (Screens & Views)" {
+    
+    ' מחלקות וישויות בסיס של Vaadin
+    class HorizontalLayout
+    class VerticalLayout
+    interface BeforeEnterObserver <<Interface>>
+    
+    ' דפי המערכת (Views)
+    class ShopView
+    class HomeView
+    class RegistrationView
+    class LoginView
+    class AdminProductTab
+    class AdminUserTab
+    class AdminOrdersTab
+    class AdminStatsTab
+    class CartView
+    class AdminView
+    class HistoryView
+    class SmartCartView
+
+    ' קשרי הורשה (extends) למחלקות העיצוב
+    HorizontalLayout <|-- ShopView
+    
+    VerticalLayout <|-- HomeView
+    VerticalLayout <|-- RegistrationView
+    VerticalLayout <|-- LoginView
+    VerticalLayout <|-- AdminProductTab
+    VerticalLayout <|-- AdminUserTab
+    VerticalLayout <|-- AdminOrdersTab
+    VerticalLayout <|-- AdminStatsTab
+    VerticalLayout <|-- CartView
+    VerticalLayout <|-- AdminView
+    VerticalLayout <|-- HistoryView
+    VerticalLayout <|-- SmartCartView
+    
+    ' קשרי מימוש (implements) לבדיקת הרשאות טרם כניסה לדף
+    BeforeEnterObserver <|.. AdminView
+    BeforeEnterObserver <|.. HistoryView
+    BeforeEnterObserver <|.. SmartCartView
+     BeforeEnterObserver <|.. CartView
+}
+@enduml

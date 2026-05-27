@@ -26,9 +26,9 @@ import davidbg.smartcart.services.WeatherService;
 public class HomeView extends VerticalLayout 
 {
     // 1. עדכון משתני המחלקה והזרקתם בקונסטרקטור
-private final WeatherService weatherService;
-private final ProductService productService;
-private final UserService userService;
+    private final WeatherService weatherService;
+    private final ProductService productService;
+    private final UserService userService;
 
     /**
      * קונסטרקטור דף הבית - Spring יזריק לכאן אוטומטית את הסרוויסים

@@ -1,0 +1,70 @@
+@startuml
+' הגדרות עיצוב למראה נקי התואם לסביבת הפיתוח
+skinparam packageStyle rectangle
+skinparam class {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor #888888
+}
+skinparam interface {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor #888888
+}
+skinparam enum {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor #888888
+}
+
+package "Service Layer (Business Logic)" {
+    class OrderService
+    class TagFieldService
+    class UserService
+    class ProductService
+}
+
+package "Repository Layer (Data Access)" {
+    interface OrderRepository <<Interface>>
+    interface TagFieldRepository <<Interface>>
+    interface UserRepository <<Interface>>
+    interface ProductRepository <<Interface>>
+}
+
+package "Data Models" {
+    class Order
+    class TagField
+    class User
+    class Product
+    class OrderItem
+    enum Role <<Enum>>
+}
+
+' ==========================================
+' 1. קשרי הכלה: בין השירותים לרפוזיטוריז 
+' (הסרוויס מכיל את הרפוזיטורי כמשתנה מחלקה)
+' ==========================================
+OrderService *-- OrderRepository
+TagFieldService *-- TagFieldRepository
+UserService *-- UserRepository
+ProductService *-- ProductRepository
+
+' ==========================================
+' 2. קשרי תלות: מהרפוזיטוריז למודלים 
+' (חצים מקווקווים בדיוק כמו בתמונה)
+' ==========================================
+OrderRepository ..> Order
+TagFieldRepository ..> TagField
+UserRepository ..> User
+ProductRepository ..> Product
+
+' ==========================================
+' 3. קשרים פנימיים במודלים (לפי התמונה)
+' ==========================================
+' Order מכיל רשימה של OrderItem (יחס של 1 להרבה)
+Order *-- "1..*" OrderItem
+
+' User מצביע על Role
+User --> Role
+
+@enduml
