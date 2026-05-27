@@ -82,7 +82,7 @@ public class HomeView extends VerticalLayout
         H3 subTitle = new H3("המערכת החכמה להתאמת סל קניות אישי");
         subTitle.getStyle().set("color", "#64748b");
 
-        Span creatorInfo = new Span("נוצר ע\"י: דוד בן גיגי");
+        Span creatorInfo = new Span(" דויד בן גיגי | 329235535 | קריית נוער ירושלים");
         creatorInfo.getStyle()
                 .set("font-weight", "bold")
                 .set("color", "#1e293b")
